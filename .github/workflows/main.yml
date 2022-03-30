@@ -22,11 +22,11 @@ jobs:
 
       - name: Run checks
         run: |
-          nix flake check
+          nix flake check -vL
 
       - name: Build tarball
         run: |
-          nix build '.#nixosConfigurations.mysystem.config.system.build.tarball'
+          nix build -vL '.#nixosConfigurations.mysystem.config.system.build.tarball'
 
       - name: Upload tarball
         uses: actions/upload-artifact@v2
@@ -36,7 +36,7 @@ jobs:
 
       - name: Build installer
         run: |
-          nix build '.#nixosConfigurations.mysystem.config.system.build.installer'
+          nix build -vL '.#nixosConfigurations.mysystem.config.system.build.installer'
 
       - name: Upload installer
         uses: actions/upload-artifact@v2
