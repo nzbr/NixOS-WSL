@@ -72,7 +72,7 @@ jobs:
         run: docker import nixos-wsl-installer.tar.gz nixos-wsl:latest
 
       - name: Run tests
-        run: docker run --rm -t --privileged nixos-wsl:latest $(nix-instantiate --eval -E 'toString (builtins.getFlake (toString ./.)).nixosConfigurations.mysystem.config.system.build.installerScript' | jq -r .)
+        run: docker run --rm -t --privileged nixos-wsl:latest $(nix-instantiate --eval -E 'toString (builtins.getFlake (toString ./.)).nixosConfigurations.mysystem.config.system.build.installerScript' | jq -r .) systemctl status
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
