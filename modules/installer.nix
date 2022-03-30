@@ -44,6 +44,8 @@ with builtins; with lib; {
     in
     {
 
+      system.build.installerScript = installer;
+
       system.build.installer = mkTarball {
         fileName = "nixos-wsl-installer";
         compressCommand = "gzip";
