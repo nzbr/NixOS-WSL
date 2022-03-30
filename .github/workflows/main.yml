@@ -61,6 +61,9 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get -y install jq
+
       - uses: actions/download-artifact@v2
         with:
           name: installer
@@ -69,7 +72,7 @@ jobs:
         run: docker import nixos-wsl-installer.tar.gz nixos-wsl:latest
 
       - name: Run tests
-        run: docker run --rm -t --privileged nixos-wsl:latest $(nix-instantiate --eval -E 'toString (builtins.getFlake (toString ./.)).nixosConfigurations.mysystem.config.system.build.installerScript')
+        run: docker run --rm -t --privileged nixos-wsl:latest $(nix-instantiate --eval -E 'toString (builtins.getFlake (toString ./.)).nixosConfigurations.mysystem.config.system.build.installerScript' | jq -r .)
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
