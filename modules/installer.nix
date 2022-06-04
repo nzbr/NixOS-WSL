@@ -31,6 +31,9 @@ with builtins; with lib; {
         echo "Optimizing store..."
         nix-store --optimize
 
+        if [ "$1" == "--installer-no-shell" ]; then
+          exit 0
+        fi
         # Don't package the shell here, it's contained in the rootfs
         exec ${builtins.unsafeDiscardStringContext config.users.users.root.shell} "$@"
       '';
@@ -41,6 +44,8 @@ with builtins; with lib; {
       '';
     in
     {
+
+      system.build.installerPath = toString installer;
 
       system.build.installer = mkTarball {
         fileName = "nixos-wsl-installer";
