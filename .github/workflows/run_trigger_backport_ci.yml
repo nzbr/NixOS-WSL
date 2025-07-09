@@ -1,0 +1,31 @@
+name: Run Backport CI
+
+on:
+  workflow_call:
+    inputs:
+      pr:
+        required: true
+        type: number
+
+jobs:
+  trigger-ci:
+    name: Trigger CI on Backport Branch 🚀
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Find branch
+        id: find_branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch=$(gh pr view ${{ inputs.pr }} --json headRefName -q .headRefName)
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+
+      - name: Workflow Dispatch
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: "on_push.yml"
+          ref: ${{ steps.find_branch.outputs.branch }}
+          inputs: '{"post_result": true}'
